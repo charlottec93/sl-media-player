@@ -13,12 +13,31 @@
             overflow: hidden;
             background: black;
         }
+
+        #player {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        /* Invisible layer covering the whole video.
+           Clicking anywhere turns sound on. */
+        #soundButton {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
 
 <div id="player"></div>
+
+<button id="soundButton" aria-label="Turn on sound"></button>
 
 <script>
     var tag = document.createElement('script');
@@ -28,7 +47,9 @@
     var player;
 
     function onYouTubeIframeAPIReady() {
+
         player = new YT.Player('player', {
+
             videoId: 'ymPwall_CTw',
 
             playerVars: {
@@ -43,24 +64,34 @@
             },
 
             events: {
+
                 onReady: function(event) {
                     event.target.mute();
                     event.target.playVideo();
                 },
 
                 onStateChange: function(event) {
+
                     if (event.data === YT.PlayerState.ENDED) {
                         event.target.seekTo(0);
                         event.target.playVideo();
                     }
-                },
-
-                onAutoplayBlocked: function(event) {
-                    console.log("Autoplay was blocked by the browser.");
                 }
             }
         });
     }
+
+    document.getElementById('soundButton').addEventListener('click', function() {
+
+        if (player && player.unMute) {
+            player.unMute();
+            player.setVolume(100);
+            player.playVideo();
+
+            // Remove invisible click layer afterward
+            this.remove();
+        }
+    });
 </script>
 
 </body>
