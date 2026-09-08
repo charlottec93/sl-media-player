@@ -16,19 +16,32 @@
 
         #player {
             position: absolute;
-            top: 0;
-            left: 0;
+            inset: 0;
         }
 
-        /* Invisible layer covering the whole video.
-           Clicking anywhere turns sound on. */
         #soundButton {
             position: absolute;
-            inset: 0;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 10;
-            border: 0;
-            background: transparent;
+
+            padding: 12px 24px;
+            border: 1px solid white;
+            border-radius: 4px;
+
+            background: rgba(0,0,0,0.65);
+            color: white;
+
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            letter-spacing: 2px;
+
             cursor: pointer;
+        }
+
+        #soundButton:hover {
+            background: rgba(0,0,0,0.9);
         }
     </style>
 </head>
@@ -37,7 +50,9 @@
 
 <div id="player"></div>
 
-<button id="soundButton" aria-label="Turn on sound"></button>
+<button id="soundButton">
+    CLICK FOR SOUND
+</button>
 
 <script>
     var tag = document.createElement('script');
@@ -71,7 +86,6 @@
                 },
 
                 onStateChange: function(event) {
-
                     if (event.data === YT.PlayerState.ENDED) {
                         event.target.seekTo(0);
                         event.target.playVideo();
@@ -81,17 +95,19 @@
         });
     }
 
-    document.getElementById('soundButton').addEventListener('click', function() {
+    document.getElementById('soundButton')
+        .addEventListener('click', function() {
 
-        if (player && player.unMute) {
-            player.unMute();
-            player.setVolume(100);
-            player.playVideo();
+            if (player && player.unMute) {
 
-            // Remove invisible click layer afterward
-            this.remove();
-        }
-    });
+                player.unMute();
+                player.setVolume(100);
+                player.playVideo();
+
+                // Button disappears once sound is enabled
+                this.remove();
+            }
+        });
 </script>
 
 </body>
