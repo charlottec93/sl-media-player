@@ -61,18 +61,26 @@
 
     var player;
 
+    var videoList = [
+        'Kb9k5JYNHP4',
+        'Zz5-Mq-NftE',
+        'UHcYE0aY1S4',
+        'ymPwall_CTw',
+        '8M_2DEC57KA'
+    ];
+
+    var currentVideo = 0;
+
     function onYouTubeIframeAPIReady() {
 
         player = new YT.Player('player', {
 
-            videoId: 'ymPwall_CTw',
+            videoId: videoList[currentVideo],
 
             playerVars: {
                 autoplay: 1,
                 mute: 1,
                 controls: 0,
-                loop: 1,
-                playlist: 'ymPwall_CTw',
                 playsinline: 1,
                 rel: 0,
                 origin: 'https://charlottec93.github.io'
@@ -86,9 +94,16 @@
                 },
 
                 onStateChange: function(event) {
+
                     if (event.data === YT.PlayerState.ENDED) {
-                        event.target.seekTo(0);
-                        event.target.playVideo();
+
+                        currentVideo++;
+
+                        if (currentVideo >= videoList.length) {
+                            currentVideo = 0;
+                        }
+
+                        player.loadVideoById(videoList[currentVideo]);
                     }
                 }
             }
@@ -104,7 +119,6 @@
                 player.setVolume(100);
                 player.playVideo();
 
-                // Button disappears once sound is enabled
                 this.remove();
             }
         });
